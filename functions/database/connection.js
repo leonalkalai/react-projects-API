@@ -1,7 +1,6 @@
 import { MongoClient, ServerApiVersion } from "mongodb"; // import  MongoClient and ServerApiVersion classes from mongodb
 const uri = process.env.ATLAS_URI || ""; // get Atlas URI from env file
 
-const serverless = true; // change it to false if not
 /*
 create a variable that stores the MongoDB client instance after it connects to the database
 in Serverless functionality every function call creates a new instance of the function. 
@@ -32,22 +31,13 @@ const client = new MongoClient(uri, {
 async function getDatabase() {
   try {
     await client.connect(); // wait to Connect to the database.
-    if (serverless) {
-      // if serverless
-      // Check if cached client exist.
-      if (!cachedClient) {
-        cachedClient = client; // Store the connected client in the cache.
-        console.log("MongoDB connection established sucessfully");
-      }
-      return cachedClient.db("projects"); // Return the database instance from the cached client.
-    } else {
-      // if not serverless
-      await client.db("admin").command({ ping: 1 }); // connect to admin database and send a ping to test the connection
-      // [ https://www.mongodb.com/docs/drivers/node/current/fundamentals/run-command/ ]
-      // [ https://www.mongodb.com/docs/manual/reference/command/ping/ ]
+    // if serverless
+    // Check if cached client exist.
+    if (!cachedClient) {
+      cachedClient = client; // Store the connected client in the cache.
       console.log("MongoDB connection established sucessfully");
-      return client.db("projects");
     }
+    return cachedClient.db("projects"); // Return the database instance from the cached client.
   } catch (error) {
     console.error(error); // console log error
   }
