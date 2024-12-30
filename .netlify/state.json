@@ -1,0 +1,19 @@
+{
+	"geolocation": {
+		"data": {
+			"city": "Thessaloniki",
+			"country": {
+				"code": "GR",
+				"name": "Greece"
+			},
+			"subdivision": {
+				"code": "B",
+				"name": "Central Macedonia"
+			},
+			"timezone": "Europe/Athens",
+			"latitude": 40.6439,
+			"longitude": 22.9358
+		},
+		"timestamp": 1735582606165
+	}
+}
