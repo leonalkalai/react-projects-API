@@ -43,6 +43,16 @@ var connection_default = projects_db;
 // functions/project.mjs
 import { ObjectId } from "mongodb";
 async function handler(event, context) {
+  // Log the method specifically to check if it's there
+  console.log("Event Method:", event?.httpMethod); // Optional chaining to avoid errors if method doesn't exist
+
+  console.log("Event path:", event?.path);
+
+  console.log("Event path:", event?.queryStringParameters);
+
+  // Log the entire event object to inspect its structure
+  console.log("Event Object:", JSON.stringify(event, null, 2)); // Pretty-print the event object
+
   const { httpMethod, path, queryStringParameters, body: body2 } = event;
   const id = path.split("/").pop();
   const headers2 = {
