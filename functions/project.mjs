@@ -58,7 +58,7 @@ export async function handler(event, context) {
   }
 
   try {
-    if (method === "GET" && path === "/") {
+    if (method === "GET" && path === "/project") {
       return await getProjects();
     }
 
@@ -81,11 +81,11 @@ export async function handler(event, context) {
     // If the method is not supported
     // ${JSON.stringify(event, null, 2)}
     // If the method is not supported, return a 405 error
-    // return {
-    //   statusCode: 405,
-    //   headers,
-    //   body: `Method ${method} Not Allowed`,
-    // };
+    return {
+      statusCode: 405,
+      headers,
+      body: `Method ${method} Not Allowed`,
+    };
   } catch (error) {
     console.error("Error:", error);
     return {
