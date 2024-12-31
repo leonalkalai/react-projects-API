@@ -115,12 +115,14 @@ export async function handler(event, context) {
     const projects = await getProjects();
     return {
       statusCode: 200,
+      headers, // Include the headers in the response
       body: JSON.stringify(projects),
     };
   }
 
   return {
     statusCode: 405,
+    headers, // Include the headers in the response
     body: "Method Not Allowed",
   };
 }
