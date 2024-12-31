@@ -62,7 +62,7 @@ export async function handler(event, context) {
       return await getProjects();
     }
 
-    if (method === "GET" && path === "/project/") {
+    if (method === "GET" && path === "/project") {
       return await getProject(id);
     }
 
@@ -79,11 +79,12 @@ export async function handler(event, context) {
     }
 
     // If the method is not supported
+    // ${JSON.stringify(event, null, 2)}
     // If the method is not supported, return a 405 error
     return {
       statusCode: 405,
       headers,
-      body: `Method ${method} Not Allowed ${JSON.stringify(event, null, 2)}`,
+      body: `Method ${method} Not Allowed`,
     };
   } catch (error) {
     console.error("Error:", error);
