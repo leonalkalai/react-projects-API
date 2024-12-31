@@ -29,9 +29,9 @@ export async function handler(event, context) {
   console.log("Event Object:", JSON.stringify(event, null, 2)); // Pretty-print the event object
 
   // Log the method specifically to check if it's there
-  console.log("Event Method:", event?.method); // Optional chaining to avoid errors if method doesn't exist
+  console.log("Event Method:", event?.httpMethod); // Optional chaining to avoid errors if method doesn't exist
 
-  const { method, path, query, body } = event; // destructuring event object
+  const { httpMethod, path, queryStringParameters, body } = event; // destructuring event object
   const id = path.split("/").pop(); // get id from the path
   /*
    const method = event.method;
