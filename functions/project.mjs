@@ -24,80 +24,98 @@ event -> input event initiating the function. HTTP event -> web event.
 context ->  function’s execution environment data(timeout, memory)
 
 */
+// export async function handler(event, context) {
+
+//   // Log the method specifically to check if it's there
+//   console.log("Event Method:", event?.httpMethod); // Optional chaining to avoid errors if method doesn't exist
+
+//   console.log("Event path:", event?.path);
+
+//   console.log("Event path:", event?.queryStringParameters);
+
+//   // Log the entire event object to inspect its structure
+//   console.log("Event Object:", JSON.stringify(event, null, 2)); // Pretty-print the event object
+
+//   const { httpMethod, path, queryStringParameters, body } = event; // destructuring event object
+//   const id = path.split("/").pop(); // get id from the path
+//   /*
+//    const method = event.method;
+//    const path = event.path;
+//    const query = event.query;
+//    const body = event.body;
+//   */
+
+//   const method = httpMethod;
+//   const query = queryStringParameters;
+//   // set headers for the response
+//   const headers = {
+//     "Access-Control-Allow-Origin": "*",
+//     "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
+//     "Access-Control-Allow-Headers": "Content-Type",
+//   };
+
+//   // if method is options return status ok and the headers [ https://freedium.cfd/https://medium.com/@arsh1207/what-are-http-options-methods-2dc73615ecad ]
+//   if (method === "OPTIONS") {
+//     return {
+//       statusCode: 200,
+//       headers,
+//     };
+//   }
+
+//   try {
+//     if (method === "GET" && path === "/api/project") {
+//       return await getProjects();
+//     }
+
+//     if (method === "GET" && path === `/api/project/${id}`) {
+//       return await getProject(id);
+//     }
+
+//     if (method === "POST") {
+//       return await createProject(body);
+//     }
+
+//     if (method === "PATCH") {
+//       return await updateProject(id, body);
+//     }
+
+//     if (method === "DELETE") {
+//       return await deleteProject(id);
+//     }
+
+//     // If the method is not supported
+//     // ${JSON.stringify(event, null, 2)}
+//     // If the method is not supported, return a 405 error
+//     return {
+//       statusCode: 405,
+//       headers,
+//       body: `Method ${method} Not Allowed`,
+//     };
+//   } catch (error) {
+//     console.error("Error:", error);
+//     return {
+//       statusCode: 500,
+//       headers,
+//       body: "server error occured",
+//     };
+//   }
+// }
+
+// /functions/project.js
 export async function handler(event, context) {
-  // Log the method specifically to check if it's there
-  console.log("Event Method:", event?.httpMethod); // Optional chaining to avoid errors if method doesn't exist
+  const { httpMethod } = event;
 
-  console.log("Event path:", event?.path);
-
-  console.log("Event path:", event?.queryStringParameters);
-
-  // Log the entire event object to inspect its structure
-  console.log("Event Object:", JSON.stringify(event, null, 2)); // Pretty-print the event object
-
-  const { httpMethod, path, queryStringParameters, body } = event; // destructuring event object
-  const id = path.split("/").pop(); // get id from the path
-  /*
-   const method = event.method;
-   const path = event.path;
-   const query = event.query;
-   const body = event.body;
-  */
-
-  const method = httpMethod;
-  const query = queryStringParameters;
-  // set headers for the response
-  const headers = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
-  };
-
-  // if method is options return status ok and the headers [ https://freedium.cfd/https://medium.com/@arsh1207/what-are-http-options-methods-2dc73615ecad ]
-  if (method === "OPTIONS") {
+  if (httpMethod === "GET") {
     return {
       statusCode: 200,
-      headers,
+      body: JSON.stringify({ message: "Project data" }),
     };
   }
 
-  try {
-    if (method === "GET" && path === "/project") {
-      return await getProjects();
-    }
-
-    if (method === "GET" && path === `/project/${id}`) {
-      return await getProject(id);
-    }
-
-    if (method === "POST") {
-      return await createProject(body);
-    }
-
-    if (method === "PATCH") {
-      return await updateProject(id, body);
-    }
-
-    if (method === "DELETE") {
-      return await deleteProject(id);
-    }
-
-    // If the method is not supported
-    // ${JSON.stringify(event, null, 2)}
-    // If the method is not supported, return a 405 error
-    return {
-      statusCode: 405,
-      headers,
-      body: `Method ${method} Not Allowed`,
-    };
-  } catch (error) {
-    console.error("Error:", error);
-    return {
-      statusCode: 500,
-      headers,
-      body: "server error occured",
-    };
-  }
+  return {
+    statusCode: 405,
+    body: "Method Not Allowed",
+  };
 }
 
 // ********** Application routes **********
