@@ -1,2 +1,8 @@
 [build]
-  functions = "functions"
+  command = "# no build command" # No frontend to build
+  functions = "functions" # Correct directory for your serverless functions
+  publish = "public" # Can remain as a placeholder if unused
+
+[functions]
+  node_bundler = "esbuild" # Use esbuild for bundling serverless functions
+

@@ -1,4 +1,4 @@
-import projects_db from "./database/connection.js"; // import projects database from connection
+import { getDatabase } from "./database/connection.js"; // import projects database from connection
 
 import { ObjectId } from "mongodb"; // import ObjectId method to convert the _id field value to string [ https://www.mongodb.com/docs/manual/reference/method/ObjectId/ ]
 
@@ -105,6 +105,7 @@ class CreateProject {
 
 // GET request handler for all projects
 async function getProjects() {
+  const projects_db = await getDatabase();
   const collection = await projects_db.collection("projects");
   const projects = await collection.find({}).toArray();
   return {
@@ -116,15 +117,19 @@ async function getProjects() {
 
 // GET request handler for project with id
 async function getProject(project_id) {
+  const projects_db = await getDatabase();
   const collection = await projects_db.collection("projects");
   const query = { _id: new ObjectId(project_id) }; // set new query object id based on entry in the database having the _id field
   /* [ https://www.mongodb.com/docs/manual/reference/method/db.collection.findOne/ ]
     findOne(query) looks for a single document in the collection that matches the criteria in query (_id).
    */
   const project = await collection.findOne(query);
-
   if (!project) {
-    return { statusCode: 404, headers, body: "Project not found" };
+    return {
+      statusCode: 404,
+      headers,
+      body: JSON.stringify({ message: "Project not found" }),
+    };
   }
   return { statusCode: 200, headers, body: JSON.stringify(project) };
 }
@@ -135,14 +140,14 @@ async function createProject(body) {
     // Parse the body and instantiate CreateProject
     const reqbody = JSON.parse(body); // Parse JSON string into an object
     const newProject = new CreateProject(reqbody); // use CreateProject class to create new object
-
-    const collection = await db.collection("projects");
+    const projects_db = await getDatabase();
+    const collection = await projects_db.collection("projects");
 
     const project = await collection.insertOne(newProject);
 
     // Return success response
     return {
-      statusCode: 204,
+      statusCode: 201,
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -166,6 +171,7 @@ async function createProject(body) {
 
 // PATCH request handler for project with id
 async function updateProject(project_id, body) {
+  const projects_db = await getDatabase();
   const collection = await projects_db.collection("projects");
   const reqbody = JSON.parse(body); // Parse JSON string into an object
 
@@ -179,7 +185,9 @@ async function updateProject(project_id, body) {
     return {
       statusCode: 404,
       headers,
-      body: `Project with ${project_id} dooesn't exist`,
+      body: JSON.stringify({
+        message: `Project with ${project_id} doesn't exist`,
+      }),
     };
   }
   return { statusCode: 200, headers, body: JSON.stringify(project) };
@@ -187,6 +195,7 @@ async function updateProject(project_id, body) {
 
 // DELETE request handler for project with id
 async function deleteProject(project_id) {
+  const projects_db = await getDatabase();
   const collection = await projects_db.collection("projects");
   const reqbody = JSON.parse(body); // Parse JSON string into an object
   const query = { _id: new ObjectId(project_id) };
@@ -199,7 +208,9 @@ async function deleteProject(project_id) {
     return {
       statusCode: 404,
       headers,
-      body: `Project with ${project_id} dooesn't exist`,
+      body: JSON.stringify({
+        message: `Project with ${project_id} doesn't exist`,
+      }),
     };
   }
   return { statusCode: 200, headers, body: JSON.stringify(project) };
