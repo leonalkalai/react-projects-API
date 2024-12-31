@@ -40,6 +40,8 @@ export async function handler(event, context) {
    const body = event.body;
   */
 
+  const method = httpMethod;
+  const query = queryStringParameters;
   // set headers for the response
   const headers = {
     "Access-Control-Allow-Origin": "*",
