@@ -31,7 +31,7 @@ const client = new MongoClient(uri, {
   },
 });
 
-async function getDatabase() {
+export async function getDatabase() {
   if (cachedClient) {
     // Return cached client if it exists
     return cachedClient.db("projects");
@@ -47,5 +47,3 @@ async function getDatabase() {
     throw error; // Rethrow the error to handle it appropriately in the calling function
   }
 }
-
-export default getDatabase;

@@ -215,5 +215,3 @@ async function deleteProject(project_id) {
   }
   return { statusCode: 200, headers, body: JSON.stringify(project) };
 }
-
-export default router; // export router module
