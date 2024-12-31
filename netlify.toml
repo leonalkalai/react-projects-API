@@ -1,17 +1,19 @@
 [build]
   command = "# no build command" # No frontend to build
-  functions = "functions" # Correct directory for your serverless functions
+  functions = "./functions" # Correct directory for your serverless functions
   publish = "" # Can remain as a placeholder if unused
 
 [functions]
   node_bundler = "esbuild" # Use esbuild for bundling serverless functions
 
 [[redirects]]
-from = "/*"
-to = "/functions/:splat"
-status = 200
+  from = "/api/*"
+  to = "/functions/:splat"
+  status = 200
 
 [[headers]]
   for = "/*"
     [headers.values]
     Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PATCH, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type"
