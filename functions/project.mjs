@@ -71,7 +71,12 @@ export async function handler(event, context) {
     }
 
     // If the method is not supported
-    return { statusCode: 405, headers, body: `Method ${method} Not Allowed` };
+    // If the method is not supported, return a 405 error
+    return {
+      statusCode: 405,
+      headers,
+      body: `Method ${method} Not Allowed ${event}`,
+    };
   } catch (error) {
     console.error("Error:", error);
     return {
