@@ -25,6 +25,8 @@ context ->  function’s execution environment data(timeout, memory)
 
 */
 export async function handler(event, context) {
+  console.log("Event Method:", event.method); // Debugging the method
+
   const { method, path, query, body } = event; // destructuring event object
   const id = path.split("/").pop(); // get id from the path
   /*
