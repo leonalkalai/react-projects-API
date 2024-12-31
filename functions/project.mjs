@@ -25,13 +25,27 @@ context ->  function’s execution environment data(timeout, memory)
 
 */
 export async function handler(event, context) {
+  // Log the method specifically to check if it's there
+  console.log("Event Method:", event?.httpMethod); // Optional chaining to avoid errors if method doesn't exist
+
+  console.log("Event path:", event?.path);
+
+  console.log("Event path:", event?.queryStringParameters);
+
   // Log the entire event object to inspect its structure
   console.log("Event Object:", JSON.stringify(event, null, 2)); // Pretty-print the event object
 
   const { httpMethod, path, queryStringParameters, body } = event; // destructuring event object
-  const method = httpMethod.toUpperCase(); // Ensure method is uppercase for consistency
-  const query = queryStringParameters;
+  const id = path.split("/").pop(); // get id from the path
+  /*
+   const method = event.method;
+   const path = event.path;
+   const query = event.query;
+   const body = event.body;
+  */
 
+  const method = httpMethod;
+  const query = queryStringParameters;
   // set headers for the response
   const headers = {
     "Access-Control-Allow-Origin": "*",
@@ -39,7 +53,7 @@ export async function handler(event, context) {
     "Access-Control-Allow-Headers": "Content-Type",
   };
 
-  // Handling OPTIONS requests for CORS preflight check
+  // if method is options return status ok and the headers [ https://freedium.cfd/https://medium.com/@arsh1207/what-are-http-options-methods-2dc73615ecad ]
   if (method === "OPTIONS") {
     return {
       statusCode: 200,
@@ -47,45 +61,43 @@ export async function handler(event, context) {
     };
   }
 
-  // Handling valid GET, POST, PATCH, DELETE methods
-  if (
-    method === "GET" ||
-    method === "POST" ||
-    method === "PATCH" ||
-    method === "DELETE"
-  ) {
-    // Extract the project ID from path if it matches "/project/{id}"
-    const projectIdPattern = /^\/project\/([^\/]+)$/;
-    const match = path.match(projectIdPattern);
-    const id = match ? match[1] : null; // Extract ID from path if available
-
+  try {
     if (method === "GET" && path === "/project") {
-      return await getProjects(); // Handle /project for GET request
+      return await getProjects();
     }
 
-    if (method === "GET" && id) {
-      return await getProject(id); // Handle /project/{id} for GET request
+    if (method === "GET" && path === `/project/${id}`) {
+      return await getProject(id);
     }
 
     if (method === "POST") {
-      return await createProject(body); // Handle POST request
+      return await createProject(body);
     }
 
     if (method === "PATCH") {
-      return await updateProject(id, body); // Handle PATCH request
+      return await updateProject(id, body);
     }
 
     if (method === "DELETE") {
-      return await deleteProject(id); // Handle DELETE request
+      return await deleteProject(id);
     }
-  }
 
-  // If the method is not supported, return a 405 Method Not Allowed
-  return {
-    statusCode: 405,
-    headers,
-    body: `Method ${method} Not Allowed`,
-  };
+    // If the method is not supported
+    // ${JSON.stringify(event, null, 2)}
+    // If the method is not supported, return a 405 error
+    return {
+      statusCode: 405,
+      headers,
+      body: `Method ${method} Not Allowed`,
+    };
+  } catch (error) {
+    console.error("Error:", error);
+    return {
+      statusCode: 500,
+      headers,
+      body: "server error occured",
+    };
+  }
 }
 
 // ********** Application routes **********
