@@ -106,9 +106,10 @@ export async function handler(event, context) {
   const { httpMethod } = event;
 
   if (httpMethod === "GET") {
+    const projects = await getProjects();
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: "Project data" }),
+      body: JSON.stringify(projects),
     };
   }
 
