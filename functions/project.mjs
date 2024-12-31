@@ -105,6 +105,12 @@ context ->  function’s execution environment data(timeout, memory)
 export async function handler(event, context) {
   const { httpMethod } = event;
 
+  const headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+  };
+
   if (httpMethod === "GET") {
     const projects = await getProjects();
     return {
