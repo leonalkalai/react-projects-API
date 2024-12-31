@@ -6,3 +6,12 @@
 [functions]
   node_bundler = "esbuild" # Use esbuild for bundling serverless functions
 
+[[redirects]]
+from = "/*"
+to = "/functions/:splat"
+status = 200
+
+[[headers]]
+  for = "/*"
+    [headers.values]
+    Access-Control-Allow-Origin = "*"
