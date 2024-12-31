@@ -111,6 +111,14 @@ const headers = {
 export async function handler(event, context) {
   const { httpMethod } = event;
 
+  if (httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers, // Return CORS headers for preflight
+      body: "",
+    };
+  }
+
   if (httpMethod === "GET") {
     const projects = await getProjects();
     return {
@@ -153,6 +161,10 @@ async function getProjects() {
   const projects_db = await getDatabase();
   const collection = await projects_db.collection("projects");
   const projects = await collection.find({}).toArray();
+
+  // Debugging output to check the fetched data
+  console.log("Fetched projects:", projects);
+
   return {
     statusCode: 200,
     headers,
