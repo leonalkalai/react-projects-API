@@ -62,11 +62,11 @@ export async function handler(event, context) {
   }
 
   try {
-    if (method === "GET" && path === "/project") {
+    if (method === "POST" && path === "/project") {
       return await getProjects();
     }
 
-    if (method === "GET" && path === `/project/${id}`) {
+    if (method === "POST" && path === `/project/${id}`) {
       return await getProject(id);
     }
 
