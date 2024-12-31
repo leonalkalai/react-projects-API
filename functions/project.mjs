@@ -25,7 +25,11 @@ context ->  function’s execution environment data(timeout, memory)
 
 */
 export async function handler(event, context) {
-  console.log("Event Method:", event.method); // Debugging the method
+  // Log the entire event object to inspect its structure
+  console.log("Event Object:", JSON.stringify(event, null, 2)); // Pretty-print the event object
+
+  // Log the method specifically to check if it's there
+  console.log("Event Method:", event?.method); // Optional chaining to avoid errors if method doesn't exist
 
   const { method, path, query, body } = event; // destructuring event object
   const id = path.split("/").pop(); // get id from the path
@@ -77,7 +81,7 @@ export async function handler(event, context) {
     return {
       statusCode: 405,
       headers,
-      body: `Method ${method} Not Allowed ${event}`,
+      body: `Method ${method} Not Allowed ${JSON.stringify(event, null, 2)}`,
     };
   } catch (error) {
     console.error("Error:", error);
