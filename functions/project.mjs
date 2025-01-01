@@ -125,7 +125,7 @@ export async function handler(event, context) {
     };
   }
 
-  if (httpMethod === "GET" && path === "/api/project") {
+  if (httpMethod === "GET" && path === "/api") {
     try {
       const projects = await getProjects();
       return {
@@ -147,13 +147,13 @@ export async function handler(event, context) {
     }
   }
 
-  if (httpMethod === "GET" && path === `/api/project/${id}`) {
+  if (httpMethod === "GET" && path === `/api/${queryStringParameters.id}`) {
     try {
-      const projects = await getProject(id);
+      const project = await getProject(queryStringParameters.id);
       return {
         statusCode: 200,
         headers, // Include the headers in the response
-        body: JSON.stringify({ success: true, data: projects }),
+        body: JSON.stringify({ success: true, data: project }),
       };
     } catch (error) {
       console.error("Error:", error);
