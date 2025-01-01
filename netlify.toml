@@ -7,8 +7,8 @@
   node_bundler = "esbuild" # Use esbuild for bundling serverless functions
 
 [[redirects]]
-  from = "/projects/*"
-  to = ".netlify/functions/:splat"
+  from = "/projects"
+  to = "/.netlify/functions/projects"
   status = 200
 
 [[headers]]
