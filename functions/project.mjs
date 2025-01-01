@@ -192,7 +192,7 @@ export async function handler(event, context) {
   }
 
   if (httpMethod === "PATCH" && path.startsWith(`/api/edit/`)) {
-    const projectId = path.split("/api/project/edit/")[1]; // Extract the projectId from the path
+    const projectId = path.split("/api/edit/")[1]; // Extract the projectId from the path
     try {
       const project = await updateProject(projectId, JSON.parse(body));
       return {
