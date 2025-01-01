@@ -120,7 +120,7 @@ export async function handler(event, context) {
     return {
       statusCode: 200,
       headers, // Return CORS headers for preflight
-      body: "",
+      body: JSON.stringify({ success: true }),
     };
   }
 
@@ -146,12 +146,10 @@ export async function handler(event, context) {
     }
   }
 
-  if (
-    httpMethod === "GET" &&
-    path === `/api/project/${queryStringParameters.id}`
-  ) {
+  const projectId = path.split("/").pop(); // Extract ID from path
+  if (httpMethod === "GET" && path === `/api/project/${projectId}`) {
     try {
-      const project = await getProject(queryStringParameters.id);
+      const project = await getProject(projectId);
       return {
         statusCode: 200,
         headers, // Include the headers in the response
