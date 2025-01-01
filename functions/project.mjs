@@ -192,7 +192,7 @@ export async function handler(event, context) {
     }
   }
 
-  if (httpMethod === "PATCH" && path.startsWith(`/api/project/`)) {
+  if (httpMethod === "PATCH" && path.startsWith(`/api/project/edit/`)) {
     try {
       const project = await updateProject(projectId, JSON.parse(body));
       return {
