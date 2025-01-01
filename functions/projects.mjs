@@ -124,7 +124,7 @@ export async function handler(event, context) {
     };
   }
 
-  if (httpMethod === "GET" && path === "/projects/") {
+  if (httpMethod === "GET" && path.startsWith(`/projects/`)) {
     try {
       const projects = await getProjects();
       return {
