@@ -146,10 +146,77 @@ export async function handler(event, context) {
     }
   }
 
-  const projectId = path.split("/").pop(); // Extract ID from path
+  const projectId = path.split("/").pop(); // Extract project id from path
+
   if (httpMethod === "GET" && path === `/api/project/${projectId}`) {
     try {
       const project = await getProject(projectId);
+      return {
+        statusCode: 200,
+        headers, // Include the headers in the response
+        body: JSON.stringify({ success: true, data: project }),
+      };
+    } catch (error) {
+      console.error("Error:", error);
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: "An internal server error occurred.",
+          error: error.message, // Include error details for debugging
+        }),
+      };
+    }
+  }
+
+  if (httpMethod === "POST") {
+    try {
+      const project = await createProject(body);
+      return {
+        statusCode: 200,
+        headers, // Include the headers in the response
+        body: JSON.stringify({ success: true, data: project }),
+      };
+    } catch (error) {
+      console.error("Error:", error);
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: "An internal server error occurred.",
+          error: error.message, // Include error details for debugging
+        }),
+      };
+    }
+  }
+
+  if (httpMethod === "PATCH") {
+    try {
+      const project = await updateProject(projectId, body);
+      return {
+        statusCode: 200,
+        headers, // Include the headers in the response
+        body: JSON.stringify({ success: true, data: project }),
+      };
+    } catch (error) {
+      console.error("Error:", error);
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: "An internal server error occurred.",
+          error: error.message, // Include error details for debugging
+        }),
+      };
+    }
+  }
+
+  if (httpMethod === "DELETE" && path === `/api/project/${projectId}`) {
+    try {
+      const project = await deleteProject(projectId);
       return {
         statusCode: 200,
         headers, // Include the headers in the response
