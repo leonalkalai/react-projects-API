@@ -192,9 +192,9 @@ export async function handler(event, context) {
     }
   }
 
-  if (httpMethod === "PATCH") {
+  if (httpMethod === "PATCH" && path === `/api/project/${projectId}`) {
     try {
-      const project = await updateProject(projectId, body);
+      const project = await updateProject(projectId, JSON.parse(body));
       return {
         statusCode: 200,
         headers, // Include the headers in the response
