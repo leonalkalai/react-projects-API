@@ -148,7 +148,7 @@ export async function handler(event, context) {
 
   const projectId = path.split("/").pop(); // Extract project id from path
 
-  if (httpMethod === "GET" && path === `/api/project/${projectId}`) {
+  if (httpMethod === "GET" && path.startsWith(`/api/project/`)) {
     try {
       const project = await getProject(projectId);
       return {
@@ -192,7 +192,7 @@ export async function handler(event, context) {
     }
   }
 
-  if (httpMethod === "PATCH" && path === `/api/project/${projectId}`) {
+  if (httpMethod === "PATCH" && && path.startsWith(`/api/project/`)) {
     try {
       const project = await updateProject(projectId, JSON.parse(body));
       return {
