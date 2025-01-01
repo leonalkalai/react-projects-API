@@ -107,14 +107,13 @@ context ->  function’s execution environment data(timeout, memory)
 //   }
 // }
 
+const headers = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
 // /functions/project.js
 export async function handler(event, context) {
-  const headers = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
-  };
-
   const { httpMethod, path, queryStringParameters, body } = event;
 
   if (httpMethod === "OPTIONS") {
@@ -149,7 +148,7 @@ export async function handler(event, context) {
 
   if (
     httpMethod === "GET" &&
-    path === `/api//project/${queryStringParameters.id}`
+    path === `/api/project/${queryStringParameters.id}`
   ) {
     try {
       const project = await getProject(queryStringParameters.id);
