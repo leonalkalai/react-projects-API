@@ -125,7 +125,7 @@ export async function handler(event, context) {
     };
   }
 
-  if (httpMethod === "GET" && path === "/api") {
+  if (httpMethod === "GET" && path === "/api/project") {
     try {
       const projects = await getProjects();
       return {
@@ -147,7 +147,10 @@ export async function handler(event, context) {
     }
   }
 
-  if (httpMethod === "GET" && path === `/api/${queryStringParameters.id}`) {
+  if (
+    httpMethod === "GET" &&
+    path === `/api//project/${queryStringParameters.id}`
+  ) {
     try {
       const project = await getProject(queryStringParameters.id);
       return {
