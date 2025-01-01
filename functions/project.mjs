@@ -146,9 +146,8 @@ export async function handler(event, context) {
     }
   }
 
-  const projectId = path.split("/").pop(); // Extract project id from path
-
   if (httpMethod === "GET" && path.startsWith(`/api/project/`)) {
+    const projectId = path.split("/").pop(); // Extract project id from path
     try {
       const project = await getProject(projectId);
       return {
@@ -193,6 +192,7 @@ export async function handler(event, context) {
   }
 
   if (httpMethod === "PATCH" && path.startsWith(`/api/project/edit/`)) {
+    const projectId = path.split("/api/project/edit/")[1]; // Extract the projectId from the path
     try {
       const project = await updateProject(projectId, JSON.parse(body));
       return {
@@ -214,7 +214,10 @@ export async function handler(event, context) {
     }
   }
 
-  if (httpMethod === "DELETE" && path === `/api/project/${projectId}`) {
+  if (httpMethod === "DELETE" && path.startsWith("/api/project/edit/")) {
+    // Extract the projectId from the path (from `/api/project/edit/:id`)
+    const projectId = path.split("/api/project/edit/")[1]; // This will give you the `projectId`
+
     try {
       const project = await deleteProject(projectId);
       return {
