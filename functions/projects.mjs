@@ -320,7 +320,7 @@ async function createProject(body) {
 
     const project = await collection.insertOne(newProject);
 
-    newProject._id = result.insertedId;
+    newProject._id = project.insertedId;
 
     // Return the new project along with its MongoDB _id
     return {
