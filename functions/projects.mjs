@@ -269,7 +269,7 @@ export async function handler(event, context) {
 // CreateProject class
 class CreateProject {
   constructor(reqbody) {
-    this._id = _id;
+    this._id = reqbody._id;
     this.name = reqbody.name;
     this.category = reqbody.category;
     this.description = reqbody.description;
