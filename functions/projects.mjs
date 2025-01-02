@@ -173,13 +173,19 @@ export async function handler(event, context) {
     }
   }
 
-  if (httpMethod === "POST") {
+  if (httpMethod === "POST" && path.startsWith("/projects/create")) {
+    // Set headers for the response
+    const headers = {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+    };
+
     try {
       const project = await createProject(body);
       return {
         statusCode: 200,
         headers, // Include the headers in the response
-        body: JSON.stringify({ success: true, data: project }),
+        body: JSON.stringify({ success: true, data: project.data }),
       };
     } catch (error) {
       console.error("Error:", error);
