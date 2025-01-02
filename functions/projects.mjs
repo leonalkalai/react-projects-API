@@ -173,7 +173,7 @@ export async function handler(event, context) {
     }
   }
 
-  if (httpMethod === "POST") {
+  if (httpMethod === "POST" && path === "/projects/create") {
     try {
       const project = await createProject(body);
       return {
@@ -262,8 +262,8 @@ export async function handler(event, context) {
 
 // CreateProject class
 class CreateProject {
-  constructor(request) {
-    const reqbody = request.body; // easier access to request.body
+  constructor(reqbody) {
+    this._id = _id;
     this.name = reqbody.name;
     this.category = reqbody.category;
     this.description = reqbody.description;
@@ -314,33 +314,25 @@ async function createProject(body) {
   try {
     // Parse the body and instantiate CreateProject
     const reqbody = JSON.parse(body); // Parse JSON string into an object
-    const newProject = new CreateProject(reqbody); // use CreateProject class to create new object
+    const newProjectConstructor = new CreateProject(reqbody); // use CreateProject class to create new object
     const projects_db = await getDatabase();
     const collection = await projects_db.collection("projects");
 
-    const project = await collection.insertOne(newProject);
+    const project = await collection.insertOne(newProjectConstructor);
 
-    // Return success response
+    // Create the project instance with the MongoDB _id
+    const newProject = new CreateProject(reqbody, result.insertedId);
+
+    // Return the new project along with its MongoDB _id
     return {
-      statusCode: 201,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify(project),
+      success: true,
+      data: newProject,
     };
   } catch (error) {
     console.error("Error adding new project:", error);
 
     // Return error response
-    return {
-      statusCode: 500, // Internal Server Error
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify({ message: "Error adding new project" }),
-    };
+    throw new Error("Error adding new project");
   }
 }
 
