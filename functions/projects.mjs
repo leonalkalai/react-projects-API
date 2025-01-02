@@ -173,7 +173,7 @@ export async function handler(event, context) {
     }
   }
 
-  if (httpMethod === "POST" && path === "/projects/create") {
+  if (httpMethod === "POST") {
     try {
       const project = await createProject(body);
       return {
