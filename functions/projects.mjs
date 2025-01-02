@@ -148,6 +148,7 @@ export async function handler(event, context) {
 
   if (httpMethod === "GET" && path.startsWith(`/projects/`)) {
     const projectId = path.split("/").pop(); // Extract project id from path
+    console.log(projectId);
     try {
       const project = await getProject(projectId);
       return {
