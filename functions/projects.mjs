@@ -154,7 +154,11 @@ export async function handler(event, context) {
       return {
         statusCode: 200,
         headers, // Include the headers in the response
-        body: JSON.stringify({ success: true, data: project }),
+        body: JSON.stringify({
+          success: true,
+          projectId: projectId,
+          data: project,
+        }),
       };
     } catch (error) {
       console.error("Error:", error);
