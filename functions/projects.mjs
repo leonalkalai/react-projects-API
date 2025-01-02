@@ -173,7 +173,7 @@ export async function handler(event, context) {
     }
   }
 
-  if (httpMethod === "POST" && path.startsWith("/projects/create")) {
+  if (httpMethod === "POST" && path.startsWith("/projects/")) {
     // Set headers for the response
     const headers = {
       "Content-Type": "application/json",
