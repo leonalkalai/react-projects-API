@@ -314,14 +314,13 @@ async function createProject(body) {
   try {
     // Parse the body and instantiate CreateProject
     const reqbody = JSON.parse(body); // Parse JSON string into an object
-    const newProjectConstructor = new CreateProject(reqbody); // use CreateProject class to create new object
+    const newProject = new CreateProject(reqbody); // use CreateProject class to create new object
     const projects_db = await getDatabase();
     const collection = await projects_db.collection("projects");
 
-    const project = await collection.insertOne(newProjectConstructor);
+    const project = await collection.insertOne(newProject);
 
-    // Create the project instance with the MongoDB _id
-    const newProject = new CreateProject(reqbody, result.insertedId);
+    newProject._id = result.insertedId;
 
     // Return the new project along with its MongoDB _id
     return {
