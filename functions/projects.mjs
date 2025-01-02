@@ -124,27 +124,27 @@ export async function handler(event, context) {
     };
   }
 
-  if (httpMethod === "GET" && path.startsWith(`/projects`)) {
-    try {
-      const projects = await getProjects();
-      return {
-        statusCode: 200,
-        headers, // Include the headers in the response
-        body: JSON.stringify({ success: true, data: projects }),
-      };
-    } catch (error) {
-      console.error("Error:", error);
-      return {
-        statusCode: 500,
-        headers,
-        body: JSON.stringify({
-          success: false,
-          message: "An internal server error occurred.",
-          error: error.message, // Include error details for debugging
-        }),
-      };
-    }
-  }
+  // if (httpMethod === "GET" && path.startsWith(`/projects`)) {
+  //   try {
+  //     const projects = await getProjects();
+  //     return {
+  //       statusCode: 200,
+  //       headers, // Include the headers in the response
+  //       body: JSON.stringify({ success: true, data: projects }),
+  //     };
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //     return {
+  //       statusCode: 500,
+  //       headers,
+  //       body: JSON.stringify({
+  //         success: false,
+  //         message: "An internal server error occurred.",
+  //         error: error.message, // Include error details for debugging
+  //       }),
+  //     };
+  //   }
+  // }
 
   if (httpMethod === "GET" && path.startsWith("/projects/")) {
     const projectId = path.split("/").pop(); // Extract project id from path
