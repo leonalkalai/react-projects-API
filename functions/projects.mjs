@@ -228,9 +228,9 @@ export async function handler(event, context) {
     }
   }
 
-  if (httpMethod === "DELETE" && path.startsWith("/projects/edit/")) {
-    // Extract the projectId from the path (from `/api/project/edit/:id`)
-    const projectId = path.split("/projects/edit/")[1]; // This will give you the `projectId`
+  if (httpMethod === "DELETE" && path.startsWith("/projects/")) {
+    const projectId = path.split("/projects/")[1];
+    // Extract the projectId from the path (from `/api/project/:id`)
 
     try {
       const project = await deleteProject(projectId);
