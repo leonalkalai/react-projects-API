@@ -205,20 +205,24 @@ export async function handler(event, context) {
     const projectId = path.split("/projects/edit/")[1]; // Extract the projectId from the path
     try {
       const project = await updateProject(projectId, JSON.parse(body));
+      // const project = await updateProject(projectId, body);
       return {
         statusCode: 200,
         headers, // Include the headers in the response
-        body: JSON.stringify({ success: true, data: project }),
+        body: JSON.stringify({
+          success: true,
+          message: `Project with ID ${projectId} was successfully updated.`,
+          data: project,
+        }),
       };
     } catch (error) {
-      console.error("Error:", error);
       return {
-        statusCode: 500,
+        // if the error contains string "not found"
+        statusCode: error.message.includes("not found") ? 404 : 500,
         headers,
         body: JSON.stringify({
           success: false,
-          message: "An internal server error occurred.",
-          error: error.message, // Include error details for debugging
+          message: error.message || "An internal server error occurred.",
         }),
       };
     }
@@ -233,17 +237,20 @@ export async function handler(event, context) {
       return {
         statusCode: 200,
         headers, // Include the headers in the response
-        body: JSON.stringify({ success: true, data: project }),
+        body: JSON.stringify({
+          success: true,
+          message: `Project with ID ${projectId} was successfully deleted.`,
+          data: project,
+        }),
       };
     } catch (error) {
-      console.error("Error:", error);
       return {
-        statusCode: 500,
+        // if the error contains string "not found"
+        statusCode: error.message.includes("not found") ? 404 : 500,
         headers,
         body: JSON.stringify({
           success: false,
-          message: "An internal server error occurred.",
-          error: error.message, // Include error details for debugging
+          message: error.message || "An internal server error occurred.",
         }),
       };
     }
@@ -343,47 +350,44 @@ async function createProject(body) {
 
 // PATCH request handler for project with id
 async function updateProject(project_id, body) {
-  const projects_db = await getDatabase();
-  const collection = await projects_db.collection("projects");
-  const reqbody = JSON.parse(body); // Parse JSON string into an object
+  try {
+    const projects_db = await getDatabase();
+    const collection = await projects_db.collection("projects");
+    const reqbody = JSON.parse(body); // Parse JSON string into an object
 
-  const query = { _id: new ObjectId(project_id) };
-  const newProject = new CreateProject(reqbody);
-  const projectUpdates = { $set: newProject };
-  const project = await collection.updateOne(query, projectUpdates);
+    const query = { _id: new ObjectId(project_id) };
+    const newProject = new CreateProject(reqbody);
+    const projectUpdates = { $set: newProject };
+    const project = await collection.updateOne(query, projectUpdates);
 
-  // matchedCount = 0 -> check if the project with the specified _id doesnt exist in the database [ https://www.mongodb.com/docs/manual/reference/method/db.collection.updateOne/]
-  if (project.matchedCount === 0) {
-    return {
-      statusCode: 404,
-      headers,
-      body: JSON.stringify({
-        message: `Project with ${project_id} doesn't exist`,
-      }),
-    };
+    // matchedCount = 0 -> check if the project with the specified _id doesnt exist in the database [ https://www.mongodb.com/docs/manual/reference/method/db.collection.updateOne/]
+    if (project.matchedCount === 0) {
+      throw new Error(`Project with ID ${project_id} not found.`);
+    }
+    return project;
+  } catch (error) {
+    console.error("Error in updateProject:", error);
+    throw error;
   }
-  return { statusCode: 200, headers, body: JSON.stringify(project) };
 }
 
 // DELETE request handler for project with id
 async function deleteProject(project_id) {
-  const projects_db = await getDatabase();
-  const collection = await projects_db.collection("projects");
-  const reqbody = JSON.parse(body); // Parse JSON string into an object
-  const query = { _id: new ObjectId(project_id) };
-  const project = await collection.deleteOne(query);
+  try {
+    const projects_db = await getDatabase();
+    const collection = await projects_db.collection("projects");
+    const query = { _id: new ObjectId(project_id) };
+    const project = await collection.deleteOne(query);
 
-  /*   check how many projects deleted
+    /*   check how many projects deleted
       deletedCount -> property of the result object returned by MongoDB’s deleteOne() method.  
     */
-  if (project.deletedCount === 0) {
-    return {
-      statusCode: 404,
-      headers,
-      body: JSON.stringify({
-        message: `Project with ${project_id} doesn't exist`,
-      }),
-    };
+    if (project.deletedCount === 0) {
+      throw new Error(`Project with ID ${project_id} not found.`);
+    }
+    return project;
+  } catch (error) {
+    console.error("Error in deleteProject:", error);
+    throw error;
   }
-  return { statusCode: 200, headers, body: JSON.stringify(project) };
 }
